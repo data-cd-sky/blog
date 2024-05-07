@@ -8,9 +8,21 @@
       <link href="/blog/2024/05/06/db-mysql/"/>
       <url>/blog/2024/05/06/db-mysql/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="搭建高可用mysql-三节点"><a href="#搭建高可用mysql-三节点" class="headerlink" title="搭建高可用mysql-三节点"></a>搭建高可用mysql-三节点</h1><h2 id="机器环境："><a href="#机器环境：" class="headerlink" title="机器环境："></a>机器环境：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/*release </span><br><span class="line">lscpu</span><br><span class="line">free -h</span><br><span class="line">df -h</span><br></pre></td></tr></table></figure><p>查看当前机器系统、cpu核数、内存、磁盘空间</p><p>1、adc-mysql-1:centos7.9，4C，7.7G（swap 8G），92G，10.32.9.227<br>2、adc-mysql-2:centos7.9，4C，7.7G（swap 8G），92G，10.32.9.228<br>3、adc-mysql-3:centos7.9，4C，7.6G（swap 0），92G，10.32.11.176</p><h2 id="各节点安装-MySQL"><a href="#各节点安装-MySQL" class="headerlink" title="各节点安装 MySQL"></a>各节点安装 MySQL</h2><p>1、mysql版本：8.0.30</p><p>添加yum源<br>安装mysql<br>配置my.cnf<br>要在CentOS 7.9上安装MySQL 8.0.30，您需要按照以下步骤操作：</p><p>import秘钥，此处需要带年份，2024的秘钥没有，所以使用的2023<br>sudo rpm –import <a href="https://repo.mysql.com/RPM-GPG-KEY-mysql-2023">https://repo.mysql.com/RPM-GPG-KEY-mysql-2023</a></p><p>下载MySQL Yum仓库配置包：<br>此处参考网上文档，使用7-5<br>wget <a href="https://dev.mysql.com/get/mysql80-community-release-el7-5.noarch.rpm">https://dev.mysql.com/get/mysql80-community-release-el7-5.noarch.rpm</a><br>安装MySQL Yum仓库配置包：</p><p>sudo rpm -ivh mysql80-community-release-el7-5.noarch.rpm<br>这个命令将添加MySQL仓库到您的仓库列表中。</p><p>查看可用的MySQL版本：<br>yum list mysql-community-server –showduplicates<br>这将列出所有可用的MySQL社区服务器版本。</p><p>选择特定版本进行安装：<br>sudo yum install mysql-community-server-8.0.30</p><p>启动MySQL服务：<br>安装完成后，启动MySQL服务：</p><p>sudo systemctl start mysqld<br>安全设置MySQL：<br>运行mysql_secure_installation脚本来设置root密码和调整安全设置：</p><p>sudo mysql_secure_installation<br>检查MySQL服务状态：<br>检查MySQL服务是否成功启动：</p><p>sudo systemctl status mysqld</p><h3 id="在-Ubuntu-上安装"><a href="#在-Ubuntu-上安装" class="headerlink" title="在 Ubuntu 上安装"></a>在 Ubuntu 上安装</h3><p>在 Ubuntu 系统上，可以使用以下命令安装 MySQL：</p><pre><code class="bash">sudo apt updatesudo apt install mysql-server</code></pre>]]></content>
       
       
+      <categories>
+          
+          <category> db </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> db </tag>
+            
+        </tags>
       
     </entry>
     
