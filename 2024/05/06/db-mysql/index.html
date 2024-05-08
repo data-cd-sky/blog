@@ -515,39 +515,42 @@
 
 <p>增加mgr复制用户（三台机器都要操作）<br>SET SQL_LOG_BIN&#x3D;0;<br>CREATE USER mgruser@’%’ IDENTIFIED BY ‘mgruser’;<br>GRANT REPLICATION SLAVE ON <em>.</em> TO mgruser@’%’;<br>FLUSH PRIVILEGES;<br>SET SQL_LOG_BIN&#x3D;1;<br>CHANGE MASTER TO MASTER_USER&#x3D;’mgruser’, MASTER_PASSWORD&#x3D;’mgruser’ FOR CHANNEL ‘group_replication_recovery’;</p>
 <p>show plugins;<br>install PLUGIN group_replication SONAME ‘group_replication.so’;<br>查看是否下载成功，使用show plugins;语句查看</p>
-<h1 id="启动mgr单主模式启动一主两从"><a href="#启动mgr单主模式启动一主两从" class="headerlink" title="启动mgr单主模式启动一主两从"></a>启动mgr单主模式启动一主两从</h1><p>主节点操作<br>SET GLOBAL group_replication_bootstrap_group&#x3D;ON;<br>START GROUP_REPLICATION;<br>SET GLOBAL group_replication_bootstrap_group&#x3D;OFF;</p>
+<h2 id="启动mgr单主模式启动一主两从"><a href="#启动mgr单主模式启动一主两从" class="headerlink" title="启动mgr单主模式启动一主两从"></a>启动mgr单主模式启动一主两从</h2><p>主节点操作<br>SET GLOBAL group_replication_bootstrap_group&#x3D;ON;<br>START GROUP_REPLICATION;<br>SET GLOBAL group_replication_bootstrap_group&#x3D;OFF;</p>
 <p>从节点操作<br>START GROUP_REPLICATION;</p>
 <p>查看此时MGR组信息，MEMBER_STATE状态全部是ONLINE才是成功。不然就需要查看日志信息。<br>SELECT * FROM performance_schema.replication_group_members;</p>
-<p>四、测试数据读写</p>
-<p>主库上操作</p>
+<p>四、测试数据读写<br>主库上操作</p>
 <ol>
-<li>创建数据库</li>
+<li>创建数据库<br>create database mgr;<br>查看从库上是否有数据库mgr</li>
+<li>创建表<br>use mgr;<br>CREATE TABLE <code>user</code> (<br>  <code>id</code> bigint NOT NULL ,<br>  <code>account</code> varchar(30)  NOT NULL ,<br>  <code>name</code> varchar(50) NOT NULL ,<br>  PRIMARY KEY (<code>id</code>) USING BTREE,<br>  UNIQUE KEY <code>UN_ACCOUNT</code> (<code>account</code>) USING BTREE<br>)<br>从库上查看表信息</li>
+<li>插入数据<br>INSERT INTO user VALUES (1, ‘zhangsan’, ‘张三’);<br>INSERT INTO user VALUES (2, ‘lisi’, ‘李四’);<br>从库查看信息如下</li>
+<li>删除数据<br>delete from user where id &#x3D; 1;<br>从库user表信息更新</li>
+<li>从库只有查询的权力，没有更改的权限</li>
+<li>主库服务停掉，查看从库状态变化<br>在node1 上执行<br>stop group_replication;<br>node1 状态变成OFFLINE下线状态<br> 在node2 上查看组信息，发现node3现在的MEMBER_ROLE为PRIMARY<br> 重新启动node1</li>
 </ol>
-<p>create database mgr;<br>查看从库上是否有数据库mgr</p>
-<ol start="2">
-<li>创建表</li>
-</ol>
-<p>use mgr;<br>CREATE TABLE <code>user</code> (<br>  <code>id</code> bigint NOT NULL ,<br>  <code>account</code> varchar(30)  NOT NULL ,<br>  <code>name</code> varchar(50) NOT NULL ,<br>  PRIMARY KEY (<code>id</code>) USING BTREE,<br>  UNIQUE KEY <code>UN_ACCOUNT</code> (<code>account</code>) USING BTREE<br>)<br>从库上查看表信息</p>
-<ol start="3">
-<li>插入数据</li>
-</ol>
-<p>INSERT INTO user VALUES (1, ‘zhangsan’, ‘张三’);<br>INSERT INTO user VALUES (2, ‘lisi’, ‘李四’);<br>从库查看信息如下</p>
-<ol start="4">
-<li>删除数据</li>
-</ol>
-<p>delete from user where id &#x3D; 1;<br>从库user表信息更新</p>
-<ol start="5">
-<li><p>从库只有查询的权力，没有更改的权限</p>
-</li>
-<li><p>主库服务停掉，查看从库状态变化</p>
-</li>
-</ol>
-<p>在node1 上执行</p>
-<p>stop group_replication;<br>node1 状态变成OFFLINE下线状态</p>
-<p> 在node2 上查看组信息，发现node3现在的MEMBER_ROLE为PRIMARY</p>
-<p> 重新启动node1</p>
 <p>start group_replication;<br>node1 重新加入到组中，但是此时是从节点</p>
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/axibazZ/article/details/127103865">https://blog.csdn.net/axibazZ/article/details/127103865</a></p>
+<h2 id="配置mysql-router"><a href="#配置mysql-router" class="headerlink" title="配置mysql router"></a>配置mysql router</h2><p>五、MGR整合MySQL Router实现读写分离</p>
+<ol>
+<li>下载安装MySQL Router</li>
+</ol>
+<p>这里我安装在node2节点上</p>
+<p>下载<br>wget <a target="_blank" rel="noopener" href="https://dev.mysql.com/get/Downloads/MySQL-Router/mysql-router-8.0.23-el7-x86_64.tar.gz">https://dev.mysql.com/get/Downloads/MySQL-Router/mysql-router-8.0.23-el7-x86_64.tar.gz</a><br>解压<br>tar -zxvf mysql-router-8.0.23-el7-x86_64.tar.gz<br>重命名<br>mv mysql-router-8.0.23-el7-x86_64 mysql-router-8.0<br>将mysql-router的目录添加到环境变量PATH中<br>echo “export PATH&#x3D;$PATH:&#x2F;opt&#x2F;apps&#x2F;mysql-router-8.0&#x2F;bin&#x2F;“ &gt;&gt; &#x2F;etc&#x2F;profile<br>source &#x2F;etc&#x2F;profile</p>
+<p>使用yum install 安装 yum install mysqlrouter</p>
+<p>验证是否安装成功<br>mysqlrouter -V<br>2. 修改MySQL Router配置</p>
+<p>在mysql-router-8.0目录下</p>
+<p>创建日志和数据目录<br>mkdir logs data<br>在&#x2F;etc 目录下创建mysqlrouter.cnf文件，内容如下<br>[DEFAULT]<br>logging_folder &#x3D; &#x2F;var&#x2F;log&#x2F;mysqlrouter<br>runtime_folder &#x3D; &#x2F;run&#x2F;mysqlrouter<br>config_folder &#x3D; &#x2F;etc&#x2F;mysqlrouter</p>
+<p>connect_timeout&#x3D;30<br>read_timeout&#x3D;30</p>
+<p>[logger]<br>level &#x3D; INFO</p>
+<h1 id="If-no-plugin-is-configured-which-starts-a-service-keepalive"><a href="#If-no-plugin-is-configured-which-starts-a-service-keepalive" class="headerlink" title="If no plugin is configured which starts a service, keepalive"></a>If no plugin is configured which starts a service, keepalive</h1><h1 id="will-make-sure-MySQL-Router-will-not-immediately-exit-It-is"><a href="#will-make-sure-MySQL-Router-will-not-immediately-exit-It-is" class="headerlink" title="will make sure MySQL Router will not immediately exit. It is"></a>will make sure MySQL Router will not immediately exit. It is</h1><h1 id="safe-to-remove-once-Router-is-configured"><a href="#safe-to-remove-once-Router-is-configured" class="headerlink" title="safe to remove once Router is configured."></a>safe to remove once Router is configured.</h1><p>[keepalive]<br>interval &#x3D; 60</p>
+<p>[routing:primary]<br>bind_address &#x3D; 0.0.0.0<br>bind_port &#x3D; 3307<br>max_connections &#x3D; 1024<br>destinations &#x3D; 10.32.9.227:3306,10.32.9.228:3306,10.32.11.176:3306<br>routing_strategy &#x3D; first-available</p>
+<p>[routing:secondary]<br>bind_address &#x3D; 0.0.0.0<br>bind_port &#x3D; 3308<br>max_connections &#x3D; 1024<br>destinations &#x3D; 10.32.9.228:3306,10.32.11.176:3306<br>routing_strategy &#x3D; round-robin</p>
+<p>修改权限(使用yum install则不需要)<br>chown -R mysql:mysql &#x2F;opt&#x2F;apps&#x2F;mysql-router-8.0&#x2F;<br>chown -R mysql:mysql &#x2F;etc&#x2F;mysqlrouter.conf<br>3. 启动MySQL Router<br>sudo systemctl start mysqlrouter(使用yum install)<br>mysqlrouter –config&#x3D;&#x2F;etc&#x2F;mysqlrouter.conf &amp;（安装包安装）<br>4. 验证是否正确<br>在node1 上连接 228 的 3307 端口查看现在的主库为node1，并且其他节点连接129的7001也均为node1。<br>在node1 上连接 228 的 3308 端口，显示连接的为node3<br>在node2 上连接 228 的 3308 端口，显示连接的为node2<br>在node3上连接 129 的 3308 端口，显示连接的为node3<br>5、验证连接3307写入</p>
+<p>DELIMITER $$</p>
+<p>CREATE PROCEDURE InsertMassiveData()<br>BEGIN<br>  DECLARE i INT DEFAULT 1;<br>  WHILE i &lt;&#x3D; 10000 DO<br>    INSERT INTO user (id, account, name) VALUES (i, CONCAT(‘user’, i), CONCAT(‘Name’, i));<br>    SET i &#x3D; i + 1;<br>  END WHILE;<br>END$$</p>
+<p>DELIMITER ;</p>
+<p>CALL InsertMassiveData();</p>
+<p>select count(*) from mgr.user;<br>结果为10000；</p>
+<p>至此，MySQL MGR集群安装完毕。</p>
 
                 
             </div>
@@ -808,11 +811,23 @@
                         </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Sky Yu
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/blog/categories/tool/" class="post-category">
+                                    tool
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/blog/tags/tool/">
+                        <span class="chip bg-color">tool</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -821,16 +836,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/blog/2024/05/06/hello-world/">
+                <a href="/blog/2024/05/06/db-mysql/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/blog/medias/featureimages/19.jpg" class="responsive-img" alt="db-mysql">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">db-mysql</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -845,11 +860,24 @@
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Sky Yu
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/blog/categories/db/" class="post-category">
+                                    db
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/blog/tags/db/">
+                        <span class="chip bg-color">db</span>
+                    </a>
+                    
                 </div>
                 
             </div>
