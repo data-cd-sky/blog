@@ -242,7 +242,7 @@ install PLUGIN group_replication SONAME 'group_replication.so';
 查看是否下载成功，使用show plugins;语句查看
 
 
-# 启动mgr单主模式启动一主两从
+## 启动mgr单主模式启动一主两从
 
 主节点操作
 SET GLOBAL group_replication_bootstrap_group=ON;
@@ -257,18 +257,11 @@ SELECT * FROM performance_schema.replication_group_members;
 
 
 四、测试数据读写
-
 主库上操作
-
 1. 创建数据库
-
 create database mgr;
 查看从库上是否有数据库mgr
-
- 
-
 2. 创建表
-
 use mgr;
 CREATE TABLE `user` (
   `id` bigint NOT NULL ,
@@ -278,44 +271,115 @@ CREATE TABLE `user` (
   UNIQUE KEY `UN_ACCOUNT` (`account`) USING BTREE
 ) 
 从库上查看表信息
-
-
-
  3. 插入数据
-
 INSERT INTO user VALUES (1, 'zhangsan', '张三');
 INSERT INTO user VALUES (2, 'lisi', '李四');
 从库查看信息如下
-
-
-
  4. 删除数据
-
 delete from user where id = 1;
 从库user表信息更新
-
-
-
 5. 从库只有查询的权力，没有更改的权限
-
-
-
 6. 主库服务停掉，查看从库状态变化
-
 在node1 上执行
-
 stop group_replication;
 node1 状态变成OFFLINE下线状态
-
-
-
  在node2 上查看组信息，发现node3现在的MEMBER_ROLE为PRIMARY
-
-
-
  重新启动node1
 
 start group_replication;
 node1 重新加入到组中，但是此时是从节点
 
 参考：https://blog.csdn.net/axibazZ/article/details/127103865
+
+## 配置mysql router
+五、MGR整合MySQL Router实现读写分离
+
+1. 下载安装MySQL Router
+
+这里我安装在node2节点上
+
+下载
+wget https://dev.mysql.com/get/Downloads/MySQL-Router/mysql-router-8.0.23-el7-x86_64.tar.gz
+解压
+tar -zxvf mysql-router-8.0.23-el7-x86_64.tar.gz
+重命名
+mv mysql-router-8.0.23-el7-x86_64 mysql-router-8.0
+将mysql-router的目录添加到环境变量PATH中
+echo "export PATH=$PATH:/opt/apps/mysql-router-8.0/bin/" >> /etc/profile
+source /etc/profile
+
+使用yum install 安装 yum install mysqlrouter
+
+验证是否安装成功
+mysqlrouter -V
+2. 修改MySQL Router配置
+
+在mysql-router-8.0目录下
+
+创建日志和数据目录
+mkdir logs data
+在/etc 目录下创建mysqlrouter.cnf文件，内容如下
+[DEFAULT]
+logging_folder = /var/log/mysqlrouter
+runtime_folder = /run/mysqlrouter
+config_folder = /etc/mysqlrouter
+
+connect_timeout=30
+read_timeout=30
+
+[logger]
+level = INFO
+
+# If no plugin is configured which starts a service, keepalive
+# will make sure MySQL Router will not immediately exit. It is
+# safe to remove once Router is configured.
+[keepalive]
+interval = 60
+
+[routing:primary]
+bind_address = 0.0.0.0
+bind_port = 3307
+max_connections = 1024
+destinations = 10.32.9.227:3306,10.32.9.228:3306,10.32.11.176:3306
+routing_strategy = first-available
+
+[routing:secondary]
+bind_address = 0.0.0.0
+bind_port = 3308
+max_connections = 1024
+destinations = 10.32.9.228:3306,10.32.11.176:3306
+routing_strategy = round-robin
+
+
+修改权限(使用yum install则不需要)
+chown -R mysql:mysql /opt/apps/mysql-router-8.0/
+chown -R mysql:mysql /etc/mysqlrouter.conf
+3. 启动MySQL Router
+sudo systemctl start mysqlrouter(使用yum install)
+mysqlrouter --config=/etc/mysqlrouter.conf &（安装包安装）
+4. 验证是否正确
+在node1 上连接 228 的 3307 端口查看现在的主库为node1，并且其他节点连接129的7001也均为node1。
+在node1 上连接 228 的 3308 端口，显示连接的为node3
+在node2 上连接 228 的 3308 端口，显示连接的为node2
+在node3上连接 129 的 3308 端口，显示连接的为node3
+5、验证连接3307写入
+
+DELIMITER $$
+
+CREATE PROCEDURE InsertMassiveData()
+BEGIN
+  DECLARE i INT DEFAULT 1;
+  WHILE i <= 10000 DO
+    INSERT INTO user (id, account, name) VALUES (i, CONCAT('user', i), CONCAT('Name', i));
+    SET i = i + 1;
+  END WHILE;
+END$$
+
+DELIMITER ;
+
+CALL InsertMassiveData();
+
+select count(*) from mgr.user;
+结果为10000；
+
+至此，MySQL MGR集群安装完毕。

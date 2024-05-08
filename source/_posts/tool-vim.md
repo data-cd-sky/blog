@@ -7,8 +7,8 @@ mathjax: true
 date: 2024-05-07 14:49:56
 password:
 summary:
-tags:
-categories:
+tags: tool
+categories: tool
 ---
 # vim 
 
