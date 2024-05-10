@@ -7,8 +7,8 @@ mathjax: true
 date: 2024-05-10 17:32:22
 password:
 summary:
-tags:
-categories:
+tags: linux
+categories: linux
 ---
 # 实现服务器登录免密
 
