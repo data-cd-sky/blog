@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="db-migrate, sky&#39;s blog">
+    <meta name="keywords" content="pgsql14+postgis Centos7.9, sky&#39;s blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>db-migrate | sky&#39;s blog</title>
+    <title>pgsql14+postgis Centos7.9 | sky&#39;s blog</title>
     <link rel="icon" type="image/png" href="/blog/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/blog/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">db-migrate</h1>
+                    <h1 class="description center-align post-title">pgsql14+postgis Centos7.9</h1>
                 </div>
             </div>
         </div>
@@ -429,25 +429,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/blog/tags/db/">
-                                <span class="chip bg-color">db</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/blog/categories/db/" class="post-category">
-                                db
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -456,7 +443,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-05-08
+                    2024-06-06
                 </div>
                 
 
@@ -480,16 +467,60 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="数据库迁移"><a href="#数据库迁移" class="headerlink" title="数据库迁移"></a>数据库迁移</h1><h2 id="MGR单主集群，通过sql创建用户"><a href="#MGR单主集群，通过sql创建用户" class="headerlink" title="MGR单主集群，通过sql创建用户"></a>MGR单主集群，通过sql创建用户</h2><p>创建一个data管理员用户<br>创建一个map用户，管理3dServer<br>CREATE DATABASE auth;<br>CREATE DATABASE process;<br>CREATE DATABASE 3dServer;<br>CREATE DATABASE label;</p>
-<p>CREATE USER ‘data‘@’%’ IDENTIFIED BY ‘data’;<br>GRANT ALL PRIVILEGES ON <em>.</em> TO ‘data‘@’%’ WITH GRANT OPTION;<br>FLUSH PRIVILEGES;</p>
-<p>CREATE USER ‘map‘@’%’ IDENTIFIED BY ‘map’;<br>GRANT ALL PRIVILEGES ON <code>3dServer</code>.* TO ‘map‘@’%’;<br>FLUSH PRIVILEGES;</p>
-<p>– 如果创建错误用户可以删除<br>DROP USER ‘3dServer‘@’%’;<br>FLUSH PRIVILEGES;</p>
-<h2 id="配置旧数据库主机到新数据库主机免密"><a href="#配置旧数据库主机到新数据库主机免密" class="headerlink" title="配置旧数据库主机到新数据库主机免密"></a>配置旧数据库主机到新数据库主机免密</h2><p>参考另一篇文章 linux-no_password</p>
-<h2 id="两边创建sql文件夹"><a href="#两边创建sql文件夹" class="headerlink" title="两边创建sql文件夹"></a>两边创建sql文件夹</h2><p>cd ~&#x2F;<br>mkdir -p sql<br>cd sql</p>
-<h2 id="在sql目录执行-数据库服务器a导出原数据库的表"><a href="#在sql目录执行-数据库服务器a导出原数据库的表" class="headerlink" title="在sql目录执行 数据库服务器a导出原数据库的表"></a>在sql目录执行 数据库服务器a导出原数据库的表</h2><p>mysqldump -uroot -proot -h 127.0.0.1 sse count_info_history &gt; count_info_history.sql</p>
-<h2 id="scp-将sql复制过去"><a href="#scp-将sql复制过去" class="headerlink" title="scp 将sql复制过去"></a>scp 将sql复制过去</h2><p>scp *.sql <a href="mailto:&#x78;&#x78;&#120;&#x40;&#120;&#x78;&#x78;&#x2e;&#x78;&#120;&#x2e;&#x78;&#x78;&#46;&#x78;&#x78;">&#x78;&#x78;&#120;&#x40;&#120;&#x78;&#x78;&#x2e;&#x78;&#120;&#x2e;&#x78;&#x78;&#46;&#x78;&#x78;</a>:&#x2F;home&#x2F;xxx&#x2F;sql</p>
-<h2 id="在服务器b上导入到新数据库"><a href="#在服务器b上导入到新数据库" class="headerlink" title="在服务器b上导入到新数据库"></a>在服务器b上导入到新数据库</h2><p>cd ~&#x2F;sql&#x2F;<br>mysql -uUsername -pPassword new_database &lt; table_name.sql</p>
-<h2 id="迁移原则："><a href="#迁移原则：" class="headerlink" title="迁移原则："></a>迁移原则：</h2><p>1、在不产生新数据时迁移；<br>2、先迁移使用频次更高的；以便有问题可以更早发现<br>3、逐步迁移，迁移前，先识别出相关项目；各后端做确认；</p>
+                <p>#在cenos7.9安装pgsql14并且配置postgis插件<br>在CentOS 7.9上安装PostgreSQL 14.7以及PostGIS插件通常涉及以下步骤：</p>
+<h3 id="安装PostgreSQL-14-7"><a href="#安装PostgreSQL-14-7" class="headerlink" title="安装PostgreSQL 14.7"></a>安装PostgreSQL 14.7</h3><ol>
+<li><p><strong>导入PostgreSQL 14的官方仓库</strong></p>
+<p>首先，你需要导入PostgreSQL的官方仓库。打开终端并运行以下命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装PostgreSQL 14</strong></p>
+<p>一旦添加了仓库，你可以安装PostgreSQL 14.7：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y postgresql14-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>初始化数据库</strong></p>
+<p>安装完成后，需要初始化数据库：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/pgsql-14/bin/postgresql-14-setup initdb</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动PostgreSQL服务并设置为开机启动</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> postgresql-14</span><br><span class="line">sudo systemctl start postgresql-14</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>切换到postgres用户并创建一个新的数据库角色（如果需要）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su - postgres</span><br><span class="line">createuser &lt;your_username&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建一个新的数据库（如果需要）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">createdb &lt;your_database_name&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>更改PostgreSQL用户的密码（推荐）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psql -c <span class="string">&quot;alter user postgres with password &#x27;your_secure_password&#x27;;&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装PostGIS"><a href="#安装PostGIS" class="headerlink" title="安装PostGIS"></a>安装PostGIS</h3><ol>
+<li><p><strong>安装EPEL仓库</strong></p>
+<p>PostGIS可能需要EPEL仓库中的一些依赖项，因此需要确保EPEL仓库已经安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y epel-release</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装PostGIS</strong></p>
+<p>现在可以安装PostGIS扩展了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y postgis31_14</span><br></pre></td></tr></table></figure>
+
+<p>这将会安装PostGIS和它的依赖项。</p>
+</li>
+<li><p><strong>在你的数据库中启用PostGIS</strong></p>
+<p>你需要为你的数据库启用PostGIS扩展。首先，切换到<code>postgres</code>用户：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo su - postgres</span><br></pre></td></tr></table></figure>
+
+<p>然后连接到你的数据库：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psql -d your_database_name</span><br></pre></td></tr></table></figure>
+
+<p>在你的数据库中启用PostGIS扩展：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> EXTENSION postgis;</span><br></pre></td></tr></table></figure>
+
+<p>如果你还需要其他相关功能，比如拓扑支持，你还可以添加：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> EXTENSION postgis_topology;</span><br></pre></td></tr></table></figure>
+
+<p>退出psql：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\q</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>现在，PostgreSQL 14.7和PostGIS应该已经在你的CentOS 7.9系统上安装并准备就绪。请注意，版本号可能会随着新版本的发布而变化，所以确保你安装的是正确的版本。如果14.7版本在执行安装命令时不可用，你可能需要指定版本号或者检查是否有新的版本发布。</p>
 
                 
             </div>
@@ -516,7 +547,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://data-cd-sky.github.io/blog/2024/05/08/db-migrate/">https://data-cd-sky.github.io/blog/2024/05/08/db-migrate/</a>
+                    <a href="https://data-cd-sky.github.io/blog/2024/06/06/pgsql14-postgis-centos7-9/">https://data-cd-sky.github.io/blog/2024/06/06/pgsql14-postgis-centos7-9/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -553,11 +584,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/blog/tags/db/">
-                                    <span class="chip bg-color">db</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -725,66 +752,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/blog/2024/05/10/linux-no-password/">
+                <a href="/blog/2024/06/06/pgsql14-postgis-centos7-9/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/0.jpg" class="responsive-img" alt="linux-no_password">
+                        <img src="/blog/medias/featureimages/6.jpg" class="responsive-img" alt="pgsql14+postgis Centos7.9">
                         
-                        <span class="card-title">linux-no_password</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-05-10
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/blog/categories/linux/" class="post-category">
-                                    linux
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/blog/tags/linux/">
-                        <span class="chip bg-color">linux</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/blog/2024/05/07/tool-vim/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/blog/medias/featureimages/19.jpg" class="responsive-img" alt="tool-vim">
-                        
-                        <span class="card-title">tool-vim</span>
+                        <span class="card-title">pgsql14+postgis Centos7.9</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -795,27 +774,53 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-05-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-06
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/blog/categories/tool/" class="post-category">
-                                    tool
-                                </a>
-                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Sky Yu
                             
                         </span>
                     </div>
                 </div>
+
                 
-                <div class="card-action article-tags">
-                    
-                    <a href="/blog/tags/tool/">
-                        <span class="chip bg-color">tool</span>
-                    </a>
-                    
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/blog/2024/06/06/hexo-cmd/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/blog/medias/featureimages/2.jpg" class="responsive-img" alt="hexo cmd">
+                        
+                        <span class="card-title">hexo cmd</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Sky Yu
+                            
+                        </span>
+                    </div>
                 </div>
                 
             </div>
