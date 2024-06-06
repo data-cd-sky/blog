@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>hexo cmd</title>
+      <link href="/blog/2024/06/06/hexo-cmd/"/>
+      <url>/blog/2024/06/06/hexo-cmd/</url>
+      
+        <content type="html"><![CDATA[<p>#hexo命令集合<br>hexo -g 生成静态文件<br>hexo -s 启动本地服务<br>hexo n “” 新建文章<br>hexo d 部署到github上</p><p>hexo init 初始化（很少用）</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>linux-no_password</title>
       <link href="/blog/2024/05/10/linux-no-password/"/>
       <url>/blog/2024/05/10/linux-no-password/</url>
