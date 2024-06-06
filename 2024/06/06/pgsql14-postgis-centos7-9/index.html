@@ -467,14 +467,14 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>#在cenos7.9安装pgsql14并且配置postgis插件<br>在CentOS 7.9上安装PostgreSQL 14.7以及PostGIS插件通常涉及以下步骤：</p>
-<h3 id="安装PostgreSQL-14-7"><a href="#安装PostgreSQL-14-7" class="headerlink" title="安装PostgreSQL 14.7"></a>安装PostgreSQL 14.7</h3><ol>
+                <p>#在cenos7.9安装pgsql14并且配置postgis插件<br>在CentOS 7.9上安装PostgreSQL 14以及PostGIS插件通常涉及以下步骤：</p>
+<h3 id="安装PostgreSQL-14"><a href="#安装PostgreSQL-14" class="headerlink" title="安装PostgreSQL 14"></a>安装PostgreSQL 14</h3><h2 id="例行-先关掉防火墙和selinux"><a href="#例行-先关掉防火墙和selinux" class="headerlink" title="例行 先关掉防火墙和selinux"></a>例行 先关掉防火墙和selinux</h2><ol>
 <li><p><strong>导入PostgreSQL 14的官方仓库</strong></p>
 <p>首先，你需要导入PostgreSQL的官方仓库。打开终端并运行以下命令：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong>安装PostgreSQL 14</strong></p>
-<p>一旦添加了仓库，你可以安装PostgreSQL 14.7：</p>
+<p>一旦添加了仓库，你可以安装PostgreSQL 14：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y postgresql14-server</span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong>初始化数据库</strong></p>
@@ -520,7 +520,11 @@
 <p>退出psql：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\q</span><br></pre></td></tr></table></figure></li>
 </ol>
-<p>现在，PostgreSQL 14.7和PostGIS应该已经在你的CentOS 7.9系统上安装并准备就绪。请注意，版本号可能会随着新版本的发布而变化，所以确保你安装的是正确的版本。如果14.7版本在执行安装命令时不可用，你可能需要指定版本号或者检查是否有新的版本发布。</p>
+<p>##配置允许远程连接<br>cd &#x2F;var&#x2F;lib&#x2F;pgsql&#x2F;14&#x2F;data<br>vim postgresql.conf</p>
+<p>修改监听所有IP</p>
+<h1 id="Connection-Settings"><a href="#Connection-Settings" class="headerlink" title="- Connection Settings -"></a>- Connection Settings -</h1><p>listen_addresses &#x3D; ‘<em>‘          # what IP address(es) to listen on;<br>                                        # comma-separated list of addresses;<br>                                        # defaults to ‘localhost’; use ‘</em>‘ for all<br>vim pg_hba.conf</p>
+<p>加上</p>
+<h1 id="TYPE-DATABASE-USER-ADDRESS-METHOD"><a href="#TYPE-DATABASE-USER-ADDRESS-METHOD" class="headerlink" title="TYPE  DATABASE        USER            ADDRESS                 METHOD"></a>TYPE  DATABASE        USER            ADDRESS                 METHOD</h1><p>host    all             all             0.0.0.0&#x2F;0               md5</p>
 
                 
             </div>
