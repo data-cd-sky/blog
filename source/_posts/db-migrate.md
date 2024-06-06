@@ -52,3 +52,16 @@ mysql -uUsername -pPassword new_database < table_name.sql
 1、在不产生新数据时迁移；
 2、先迁移使用频次更高的；以便有问题可以更早发现
 3、逐步迁移，迁移前，先识别出相关项目；各后端做确认；
+
+
+
+# 迁移pgsql数据；
+1、dump备份数据库：
+pg_dump -U username -W -F c -b -v -f "/path/to/your/backup/filename.backup" dbname
+
+2、配置免密 然后传输
+scp
+
+3、在新库恢复数据：
+createdb -U username newdbname
+pg_restore -U username -d newdbname -v "/path/to/your/backup/filename.backup"
