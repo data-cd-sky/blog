@@ -467,7 +467,22 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h1 id="安装部署geoserver"><a href="#安装部署geoserver" class="headerlink" title="安装部署geoserver"></a>安装部署geoserver</h1><p>1、安装java11<br>sudo yum install java-11-openjdk -y<br>java –version</p>
+<p>如果默认不是11，使用这个命令选择11<br>sudo alternatives –config java</p>
+<p>vim &#x2F;etc&#x2F;profile<br>export JAVA_HOME&#x3D;$(dirname $(dirname $(readlink $(readlink $(which java)))))<br>export PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin<br>source &#x2F;etc&#x2F;profile</p>
+<p>2、官网下载geoserver的二进制文件压缩包<br>解压到&#x2F;opt&#x2F;geoserver</p>
+<p>3、创建geoserver用户组和geoserver用户<br>groupadd geoserver<br>useradd -g geoserver geoserver</p>
+<p>补充：<br>groupadd zhangsangroup   #创建用户组zhangsangroup<br>useradd -g zhangsan zhangsan  创建用户zhangsan并加入zhangsangroup组</p>
+<p>useradd参数：</p>
+<p>-u UID：指定 UID，这个 UID 必须是大于等于500，并没有其他用户占用的 UID<br>-g GID&#x2F;GROUPNAME：指定默认组，可以是 GID 或者 GROUPNAME，同样也必须真实存在<br>-G GROUPS：指定额外组<br>-c COMMENT：指定用户的注释信息<br>-d PATH：指定用户的家目录</p>
+<p>4、将文件夹授权给geoserver用户<br>chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver</p>
+<p>5、配置systemctl、启动</p>
+<p>vim &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;geoserver.service</p>
+<p>[Unit]<br>Description&#x3D;GeoServer<br>After&#x3D;network.target</p>
+<p>[Service]<br>User&#x3D;geoserver<br>Group&#x3D;geoserver<br>Type&#x3D;simple<br>ExecStart&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;startup.sh<br>ExecStop&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;shutdown.sh<br>Restart&#x3D;on-failure<br>WorkingDirectory&#x3D;&#x2F;opt&#x2F;geoserver</p>
+<p>[Install]<br>WantedBy&#x3D;multi-user.target</p>
+<p>sudo systemctl daemon-reload<br>sudo systemctl start geoserver.service<br>sudo systemctl status geoserver.service</p>
+
                 
             </div>
             <hr/>
