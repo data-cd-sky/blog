@@ -482,6 +482,8 @@
 <p>[Service]<br>User&#x3D;geoserver<br>Group&#x3D;geoserver<br>Type&#x3D;simple<br>ExecStart&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;startup.sh<br>ExecStop&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;shutdown.sh<br>Restart&#x3D;on-failure<br>WorkingDirectory&#x3D;&#x2F;opt&#x2F;geoserver</p>
 <p>[Install]<br>WantedBy&#x3D;multi-user.target</p>
 <p>sudo systemctl daemon-reload<br>sudo systemctl start geoserver.service<br>sudo systemctl status geoserver.service</p>
+<h1 id="使用单独的ssd区挂载数据区"><a href="#使用单独的ssd区挂载数据区" class="headerlink" title="使用单独的ssd区挂载数据区"></a>使用单独的ssd区挂载数据区</h1><p>sudo systemctl stop geoserver<br>sudo mkdir -p &#x2F;data&#x2F;geoserver<br>sudo mv &#x2F;opt&#x2F;geoserver&#x2F;data_dir &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo ln -s &#x2F;data&#x2F;geoserver&#x2F;data_dir &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chmod -R 700 &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo systemctl start geoserver</p>
+<p>验证<br>sudo -u postgres psql -c “SHOW data_directory;”</p>
 
                 
             </div>

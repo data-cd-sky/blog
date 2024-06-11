@@ -483,6 +483,7 @@
                 <h1 id="实现服务器登录免密"><a href="#实现服务器登录免密" class="headerlink" title="实现服务器登录免密"></a>实现服务器登录免密</h1><h2 id="在服务器-A-上生成一个-SSH-密钥对（有则跳过）："><a href="#在服务器-A-上生成一个-SSH-密钥对（有则跳过）：" class="headerlink" title="在服务器 A 上生成一个 SSH 密钥对（有则跳过）："></a>在服务器 A 上生成一个 SSH 密钥对（有则跳过）：</h2><p>ssh-keygen -t rsa<br>默认情况下，这会在 ~&#x2F;.ssh&#x2F; 目录下创建两个文件：id_rsa（私钥）和 id_rsa.pub（公钥）。</p>
 <h2 id="将公钥复制到服务器-B："><a href="#将公钥复制到服务器-B：" class="headerlink" title="将公钥复制到服务器 B："></a>将公钥复制到服务器 B：</h2><p>cat ~&#x2F;.ssh&#x2F;id_rsa.pub<br>然后复制输出的内容（公钥），登录到服务器 B，创建或编辑 ~&#x2F;.ssh&#x2F;authorized_keys 文件，并将复制的公钥粘贴到文件的末尾：</p>
 <h2 id="在服务器-B-上"><a href="#在服务器-B-上" class="headerlink" title="在服务器 B 上"></a>在服务器 B 上</h2><p>mkdir -p ~&#x2F;.ssh<br>chmod 700 ~&#x2F;.ssh<br>echo ‘粘贴公钥内容’ &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys<br>chmod 600 ~&#x2F;.ssh&#x2F;authorized_keys</p>
+<p>免密要注意 &#x2F;home和~&#x2F; 755 别给777</p>
 <p>以上齐活</p>
 
                 
