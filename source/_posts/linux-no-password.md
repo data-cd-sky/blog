@@ -27,4 +27,7 @@ chmod 700 ~/.ssh
 echo '粘贴公钥内容' >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
+
+免密要注意 /home和~/ 755 别给777
+
 以上齐活

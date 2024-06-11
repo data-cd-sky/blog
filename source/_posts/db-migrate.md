@@ -65,3 +65,16 @@ scp
 3、在新库恢复数据：
 createdb -U username newdbname
 pg_restore -U username -d newdbname -v "/path/to/your/backup/filename.backup"
+
+# 使用单独的ssd区挂载数据区
+sudo systemctl stop postgresql14
+sudo mkdir -p /data/pgsql/14
+sudo mv /var/lib/pgsql/14/data /data/pgsql/14/data
+sudo ln -s /data/pgsql/14/data /var/lib/pgsql/14/data
+sudo chown -R postgres:postgres /data/pgsql/14/data
+sudo chown -R postgres:postgres /var/lib/pgsql/14/data
+sudo chmod -R 700 /data/pgsql/14/data
+sudo systemctl start postgresql14
+
+验证
+sudo -u postgres psql -c "SHOW data_directory;"

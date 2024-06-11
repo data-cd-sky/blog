@@ -69,3 +69,17 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 sudo systemctl start geoserver.service
 sudo systemctl status geoserver.service
+
+
+# 使用单独的ssd区挂载数据区
+sudo systemctl stop geoserver
+sudo mkdir -p /data/geoserver
+sudo mv /opt/geoserver/data_dir /data/geoserver/data_dir
+sudo ln -s /data/geoserver/data_dir /opt/geoserver/data_dir
+sudo chown -R geoserver:geoserver /data/geoserver/data_dir
+sudo chown -R geoserver:geoserver /opt/geoserver/data_dir
+sudo chmod -R 700 /data/geoserver/data_dir
+sudo systemctl start geoserver
+
+验证
+sudo -u postgres psql -c "SHOW data_directory;"
