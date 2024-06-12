@@ -119,6 +119,11 @@ categories:
    ```sh
    \q
    ```
+
+shp2gpsql命令行；
+sudo yum install postgis；
+sudo -su postgres
+
 ##配置允许远程连接
 cd /var/lib/pgsql/14/data
 vim postgresql.conf
@@ -135,3 +140,6 @@ vim pg_hba.conf
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 
 host    all             all             0.0.0.0/0               md5
+
+
+移动数据目录到/ssd或者/hdd区
