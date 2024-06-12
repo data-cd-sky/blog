@@ -520,11 +520,13 @@
 <p>退出psql：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\q</span><br></pre></td></tr></table></figure></li>
 </ol>
+<p>shp2gpsql命令行；<br>sudo yum install postgis；<br>sudo -su postgres</p>
 <p>##配置允许远程连接<br>cd &#x2F;var&#x2F;lib&#x2F;pgsql&#x2F;14&#x2F;data<br>vim postgresql.conf</p>
 <p>修改监听所有IP</p>
 <h1 id="Connection-Settings"><a href="#Connection-Settings" class="headerlink" title="- Connection Settings -"></a>- Connection Settings -</h1><p>listen_addresses &#x3D; ‘<em>‘          # what IP address(es) to listen on;<br>                                        # comma-separated list of addresses;<br>                                        # defaults to ‘localhost’; use ‘</em>‘ for all<br>vim pg_hba.conf</p>
 <p>加上</p>
 <h1 id="TYPE-DATABASE-USER-ADDRESS-METHOD"><a href="#TYPE-DATABASE-USER-ADDRESS-METHOD" class="headerlink" title="TYPE  DATABASE        USER            ADDRESS                 METHOD"></a>TYPE  DATABASE        USER            ADDRESS                 METHOD</h1><p>host    all             all             0.0.0.0&#x2F;0               md5</p>
+<p>移动数据目录到&#x2F;ssd或者&#x2F;hdd区</p>
 
                 
             </div>
