@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="geoserver install, sky&#39;s blog">
+    <meta name="keywords" content="java 8&amp;11 install, sky&#39;s blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>geoserver install | sky&#39;s blog</title>
+    <title>java 8&amp;11 install | sky&#39;s blog</title>
     <link rel="icon" type="image/png" href="/blog/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/blog/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">geoserver install</h1>
+                    <h1 class="description center-align post-title">java 8&amp;11 install</h1>
                 </div>
             </div>
         </div>
@@ -443,7 +443,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-06-06
+                    2024-07-10
                 </div>
                 
 
@@ -467,23 +467,71 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="安装部署geoserver"><a href="#安装部署geoserver" class="headerlink" title="安装部署geoserver"></a>安装部署geoserver</h1><p>1、安装java11<br>sudo yum install java-11-openjdk -y<br>java –version</p>
-<p>如果默认不是11，使用这个命令选择11<br>sudo alternatives –config java</p>
-<p>vim &#x2F;etc&#x2F;profile<br>export JAVA_HOME&#x3D;$(dirname $(dirname $(readlink $(readlink $(which java)))))<br>export PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin<br>source &#x2F;etc&#x2F;profile</p>
-<p>2、官网下载geoserver的二进制文件压缩包<br>解压到&#x2F;opt&#x2F;geoserver</p>
-<p>3、创建geoserver用户组和geoserver用户<br>groupadd geoserver<br>useradd -g geoserver geoserver</p>
-<p>补充：<br>groupadd zhangsangroup   #创建用户组zhangsangroup<br>useradd -g zhangsan zhangsan  创建用户zhangsan并加入zhangsangroup组</p>
-<p>useradd参数：</p>
-<p>-u UID：指定 UID，这个 UID 必须是大于等于500，并没有其他用户占用的 UID<br>-g GID&#x2F;GROUPNAME：指定默认组，可以是 GID 或者 GROUPNAME，同样也必须真实存在<br>-G GROUPS：指定额外组<br>-c COMMENT：指定用户的注释信息<br>-d PATH：指定用户的家目录</p>
-<p>4、将文件夹授权给geoserver用户<br>chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver</p>
-<p>5、配置systemctl、启动</p>
-<p>vim &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;geoserver.service</p>
-<p>[Unit]<br>Description&#x3D;GeoServer<br>After&#x3D;network.target</p>
-<p>[Service]<br>User&#x3D;geoserver<br>Group&#x3D;geoserver<br>Type&#x3D;simple<br>ExecStart&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;startup.sh<br>ExecStop&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;shutdown.sh<br>Restart&#x3D;on-failure<br>WorkingDirectory&#x3D;&#x2F;opt&#x2F;geoserver</p>
-<p>[Install]<br>WantedBy&#x3D;multi-user.target</p>
-<p>sudo systemctl daemon-reload<br>sudo systemctl start geoserver.service<br>sudo systemctl status geoserver.service</p>
-<h1 id="使用单独的ssd区挂载数据区"><a href="#使用单独的ssd区挂载数据区" class="headerlink" title="使用单独的ssd区挂载数据区"></a>使用单独的ssd区挂载数据区</h1><p>sudo systemctl stop geoserver<br>sudo mkdir -p &#x2F;data&#x2F;geoserver<br>sudo mv &#x2F;opt&#x2F;geoserver&#x2F;data_dir &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo ln -s &#x2F;data&#x2F;geoserver&#x2F;data_dir &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chmod -R 700 &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo systemctl start geoserver</p>
-<p>验证<br>sudo -u postgres psql -c “SHOW data_directory;”</p>
+                <p>以下是在CentOS 7.9上安装Java 8和Java 11的步骤</p>
+<h1 id="CentOS-7-9-安装-Java-8-和-Java-11"><a href="#CentOS-7-9-安装-Java-8-和-Java-11" class="headerlink" title="CentOS 7.9 安装 Java 8 和 Java 11"></a>CentOS 7.9 安装 Java 8 和 Java 11</h1><p>在CentOS 7.9上安装Java的步骤如下。我们将展示如何使用yum安装OpenJDK版本的Java 8和Java 11。</p>
+<h2 id="安装Java-8"><a href="#安装Java-8" class="headerlink" title="安装Java 8"></a>安装Java 8</h2><ol>
+<li><p><strong>更新包索引</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装OpenJDK 8</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install java-1.8.0-openjdk</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>验证安装</strong></p>
+<p>检查Java版本以确认安装成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p>输出应该显示Java 8的版本信息。</p>
+</li>
+</ol>
+<h2 id="安装Java-11"><a href="#安装Java-11" class="headerlink" title="安装Java 11"></a>安装Java 11</h2><ol>
+<li><p><strong>更新包索引</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装OpenJDK 11</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install java-11-openjdk</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>验证安装</strong></p>
+<p>检查Java版本以确认安装成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p>输出应该显示Java 11的版本信息。</p>
+</li>
+</ol>
+<h2 id="设置默认Java版本"><a href="#设置默认Java版本" class="headerlink" title="设置默认Java版本"></a>设置默认Java版本</h2><p>如果您的系统上安装了多个Java版本，您可能需要设置默认的Java版本。</p>
+<ol>
+<li><p><strong>查看所有已安装的Java版本</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alternatives --config java</span><br></pre></td></tr></table></figure>
+
+<p>这将列出所有安装的Java版本及其路径。</p>
+</li>
+<li><p><strong>选择默认的Java版本</strong></p>
+<p>使用上一步骤中显示的选择编号来设置默认的Java版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo alternatives --config java</span><br></pre></td></tr></table></figure>
+
+<p>输入对应的编号，然后按回车键。</p>
+</li>
+</ol>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>为了确保Java环境变量正确设置，您可以将<code>JAVA_HOME</code>和<code>PATH</code>环境变量添加到您的用户或系统环境中。</p>
+<ol>
+<li><p><strong>编辑用户的bash配置文件</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p>或者，编辑全局环境变量文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>添加<code>JAVA_HOME</code>和<code>PATH</code>变量</strong></p>
+<p>对于Java 8，添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin</span><br></pre></td></tr></table></figure>
+
+<p>对于Java 11，添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java-11-openjdk</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使更改生效</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p>或者，如果编辑的是<code>/etc/profile</code>，则需要重新登录或重启系统。</p>
+</li>
+</ol>
 
                 
             </div>
@@ -510,7 +558,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://data-cd-sky.github.io/blog/2024/06/06/geoserver-install/">https://data-cd-sky.github.io/blog/2024/06/06/geoserver-install/</a>
+                    <a href="https://data-cd-sky.github.io/blog/2024/07/10/java-8-11-install/">https://data-cd-sky.github.io/blog/2024/07/10/java-8-11-install/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -719,13 +767,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog/2024/07/05/data-architecture/">
+                <a href="/blog/2024/07/16/hadoop-3node-ha-centos7-9/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/9.jpg" class="responsive-img" alt="data architecture">
+                        <img src="/blog/medias/featureimages/6.jpg" class="responsive-img" alt="hadoop-3node-ha-centos7.9">
                         
-                        <span class="card-title">data architecture</span>
+                        <span class="card-title">hadoop-3node-ha-centos7.9</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -736,7 +784,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-07-05
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-07-16
                         </span>
                         <span class="publish-author">
                             
@@ -756,13 +804,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/blog/2024/06/06/pgsql14-postgis-centos7-9/">
+                <a href="/blog/2024/07/05/superset-k8s-helm/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/6.jpg" class="responsive-img" alt="pgsql14+postgis Centos7.9">
+                        <img src="/blog/medias/featureimages/1.jpg" class="responsive-img" alt="superset k8s helm">
                         
-                        <span class="card-title">pgsql14+postgis Centos7.9</span>
+                        <span class="card-title">superset k8s helm</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -773,7 +821,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-05
                             </span>
                         <span class="publish-author">
                             

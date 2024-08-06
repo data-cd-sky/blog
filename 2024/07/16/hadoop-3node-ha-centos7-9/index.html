@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="geoserver install, sky&#39;s blog">
+    <meta name="keywords" content="hadoop-3node-ha-centos7.9, sky&#39;s blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>geoserver install | sky&#39;s blog</title>
+    <title>hadoop-3node-ha-centos7.9 | sky&#39;s blog</title>
     <link rel="icon" type="image/png" href="/blog/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/blog/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/blog/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">geoserver install</h1>
+                    <h1 class="description center-align post-title">hadoop-3node-ha-centos7.9</h1>
                 </div>
             </div>
         </div>
@@ -443,7 +443,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-06-06
+                    2024-07-16
                 </div>
                 
 
@@ -467,23 +467,63 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="安装部署geoserver"><a href="#安装部署geoserver" class="headerlink" title="安装部署geoserver"></a>安装部署geoserver</h1><p>1、安装java11<br>sudo yum install java-11-openjdk -y<br>java –version</p>
-<p>如果默认不是11，使用这个命令选择11<br>sudo alternatives –config java</p>
-<p>vim &#x2F;etc&#x2F;profile<br>export JAVA_HOME&#x3D;$(dirname $(dirname $(readlink $(readlink $(which java)))))<br>export PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin<br>source &#x2F;etc&#x2F;profile</p>
-<p>2、官网下载geoserver的二进制文件压缩包<br>解压到&#x2F;opt&#x2F;geoserver</p>
-<p>3、创建geoserver用户组和geoserver用户<br>groupadd geoserver<br>useradd -g geoserver geoserver</p>
-<p>补充：<br>groupadd zhangsangroup   #创建用户组zhangsangroup<br>useradd -g zhangsan zhangsan  创建用户zhangsan并加入zhangsangroup组</p>
-<p>useradd参数：</p>
-<p>-u UID：指定 UID，这个 UID 必须是大于等于500，并没有其他用户占用的 UID<br>-g GID&#x2F;GROUPNAME：指定默认组，可以是 GID 或者 GROUPNAME，同样也必须真实存在<br>-G GROUPS：指定额外组<br>-c COMMENT：指定用户的注释信息<br>-d PATH：指定用户的家目录</p>
-<p>4、将文件夹授权给geoserver用户<br>chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver</p>
-<p>5、配置systemctl、启动</p>
-<p>vim &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;geoserver.service</p>
-<p>[Unit]<br>Description&#x3D;GeoServer<br>After&#x3D;network.target</p>
-<p>[Service]<br>User&#x3D;geoserver<br>Group&#x3D;geoserver<br>Type&#x3D;simple<br>ExecStart&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;startup.sh<br>ExecStop&#x3D;&#x2F;opt&#x2F;geoserver&#x2F;bin&#x2F;shutdown.sh<br>Restart&#x3D;on-failure<br>WorkingDirectory&#x3D;&#x2F;opt&#x2F;geoserver</p>
-<p>[Install]<br>WantedBy&#x3D;multi-user.target</p>
-<p>sudo systemctl daemon-reload<br>sudo systemctl start geoserver.service<br>sudo systemctl status geoserver.service</p>
-<h1 id="使用单独的ssd区挂载数据区"><a href="#使用单独的ssd区挂载数据区" class="headerlink" title="使用单独的ssd区挂载数据区"></a>使用单独的ssd区挂载数据区</h1><p>sudo systemctl stop geoserver<br>sudo mkdir -p &#x2F;data&#x2F;geoserver<br>sudo mv &#x2F;opt&#x2F;geoserver&#x2F;data_dir &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo ln -s &#x2F;data&#x2F;geoserver&#x2F;data_dir &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo chown -R geoserver:geoserver &#x2F;opt&#x2F;geoserver&#x2F;data_dir<br>sudo chmod -R 700 &#x2F;data&#x2F;geoserver&#x2F;data_dir<br>sudo systemctl start geoserver</p>
-<p>验证<br>sudo -u postgres psql -c “SHOW data_directory;”</p>
+                <h1 id="Hadoop三节点高可用集群配置指南"><a href="#Hadoop三节点高可用集群配置指南" class="headerlink" title="Hadoop三节点高可用集群配置指南"></a>Hadoop三节点高可用集群配置指南</h1><p>本指南将帮助您在CentOS 7上配置Hadoop三节点高可用集群。我们假设您已经安装了Hadoop，并且已经准备好三台机器作为节点。</p>
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ul>
+<li>三台运行CentOS 7的服务器，分别命名为<code>node1</code>, <code>node2</code>, <code>node3</code>。</li>
+<li>每台服务器上都已经安装了Java和Hadoop。</li>
+<li>每台服务器的<code>/etc/hosts</code>文件已配置好所有节点的IP地址和主机名。</li>
+<li>关闭防火墙，selinux,配置好时间同步</li>
+<li>三台服务器之间的SSH免密登录已经设置好。</li>
+</ul>
+<h2 id="免密步骤"><a href="#免密步骤" class="headerlink" title="免密步骤"></a>免密步骤</h2><p>ssh-keygen -t rsa -b 4096<br>cat ~&#x2F;.ssh&#x2F;id_rsa.pub<br>vim ~&#x2F;.ssh&#x2F;authorized_keys<br>放入三台的id_rsa.pub<br>chmod 700 ~&#x2F;.ssh<br>chmod 600 ~&#x2F;.ssh&#x2F;authorized_keys<br>测试免密登录<br>ssh adc-hadoop-1…-3</p>
+<h2 id="ZooKeeper安装与配置"><a href="#ZooKeeper安装与配置" class="headerlink" title="ZooKeeper安装与配置"></a>ZooKeeper安装与配置</h2><p>Hadoop高可用性依赖于ZooKeeper集群。</p>
+<ol>
+<li><strong>在所有节点上安装ZooKeeper</strong></li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/networken/article/details/116407042">https://blog.csdn.net/networken/article/details/116407042</a></p>
+<ol start="3">
+<li><p><strong>配置ZooKeeper集群</strong></p>
+<p>在每个节点的<code>/etc/zookeeper/conf/zoo.cfg</code>文件中进行配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tickTime=2000</span><br><span class="line">dataDir=/var/lib/zookeeper</span><br><span class="line">clientPort=2181</span><br><span class="line">initLimit=5</span><br><span class="line">syncLimit=2</span><br><span class="line">server.1=adc-hadoop-1:2888:3888</span><br><span class="line">server.2=adc-hadoop-2:2888:3888</span><br><span class="line">server.3=adc-hadoop-3:2888:3888</span><br></pre></td></tr></table></figure>
+
+<p>在<code>/var/lib/zookeeper</code>目录下创建一个文件名为<code>myid</code>的文件，文件内容为该节点对应的编号（例如，<code>node1</code>的<code>myid</code>文件中就写入<code>1</code>）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;1&quot;</span> &gt; /var/lib/zookeeper/myid <span class="comment"># 在node1上</span></span><br><span class="line"><span class="comment"># 对应地，在node2上写入2，在node3上写入3</span></span><br></pre></td></tr></table></figure>
+
+<p>然后重启ZooKeeper服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service zookeeper-server restart</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Hadoop配置"><a href="#Hadoop配置" class="headerlink" title="Hadoop配置"></a>Hadoop配置</h2><ol>
+<li><p><strong>配置<code>core-site.xml</code></strong></p>
+<p>在所有节点的<code>$HADOOP_CONF_DIR/core-site.xml</code>文件中添加以下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://mycluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>ha.zookeeper.quorum<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node1:2181,node2:2181,node3:2181<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置<code>hdfs-site.xml</code></strong></p>
+<p>在所有节点的<code>$HADOOP_CONF_DIR/hdfs-site.xml</code>文件中添加以下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.nameservices<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>mycluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.namenodes.mycluster<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>nn1,nn2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.rpc-address.mycluster.nn1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node1:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.rpc-address.mycluster.nn2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node2:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.http-address.mycluster.nn1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node1:50070<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.http-address.mycluster.nn2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node2:50070<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.shared.edits.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>qjournal://node1:8485;node2:8485;node3:8485/mycluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.journalnode.edits.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/mnt/journal<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.automatic-failover.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置<code>yarn-site.xml</code></strong></p>
+<p>在所有节点的<code>$HADOOP_CONF_DIR/yarn-site.xml</code>文件中添加以下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.ha.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.cluster-id<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>mycluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.ha.rm-ids<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>rm1,rm2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname.rm1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname.rm2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 配置其他YARN相关属性 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="初始化JournalNode"><a href="#初始化JournalNode" class="headerlink" title="初始化JournalNode"></a>初始化JournalNode</h2><p>在所有节点上启动JournalNode服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop-daemon.sh start journalnode</span><br></pre></td></tr></table></figure>
+
+<h2 id="格式化NameNode"><a href="#格式化NameNode" class="headerlink" title="格式化NameNode"></a>格式化NameNode</h2><p>在<code>node1</code>和<code>node2</code>上分别格式化NameNode。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动Hadoop集群"><a href="#启动Hadoop集群" class="headerlink" title="启动Hadoop集群"></a>启动Hadoop集群</h2><ol>
+<li><p><strong>启动NameNode和DataNode</strong></p>
+<p>在<code>node1</code>和<code>node2</code>上启动NameNode。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动ResourceManager和NodeManager</strong></p>
+<p>在所有节点上启动YARN服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="验证集群状态"><a href="#验证集群状态" class="headerlink" title="验证集群状态"></a>验证集群状态</h2><p>使用Web界面或<code>hdfs haadmin</code>命令来验证集群的状态。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs haadmin -getServiceState nn1</span><br><span class="line">hdfs haadmin -getServiceState nn2</span><br></pre></td></tr></table></figure>
+
+<p>现在，您应该有一个运行中的Hadoop高可用集群。</p>
 
                 
             </div>
@@ -510,7 +550,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://data-cd-sky.github.io/blog/2024/06/06/geoserver-install/">https://data-cd-sky.github.io/blog/2024/06/06/geoserver-install/</a>
+                    <a href="https://data-cd-sky.github.io/blog/2024/07/16/hadoop-3node-ha-centos7-9/">https://data-cd-sky.github.io/blog/2024/07/16/hadoop-3node-ha-centos7-9/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -719,13 +759,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/blog/2024/07/05/data-architecture/">
+                <a href="/blog/2024/08/05/flink-deploy/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/9.jpg" class="responsive-img" alt="data architecture">
+                        <img src="/blog/medias/featureimages/20.jpg" class="responsive-img" alt="flink-deploy">
                         
-                        <span class="card-title">data architecture</span>
+                        <span class="card-title">flink-deploy</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -736,7 +776,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-07-05
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-08-05
                         </span>
                         <span class="publish-author">
                             
@@ -756,13 +796,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/blog/2024/06/06/pgsql14-postgis-centos7-9/">
+                <a href="/blog/2024/07/10/java-8-11-install/">
                     <div class="card-image">
                         
                         
-                        <img src="/blog/medias/featureimages/6.jpg" class="responsive-img" alt="pgsql14+postgis Centos7.9">
+                        <img src="/blog/medias/featureimages/15.jpg" class="responsive-img" alt="java 8&amp;11 install">
                         
-                        <span class="card-title">pgsql14+postgis Centos7.9</span>
+                        <span class="card-title">java 8&amp;11 install</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -773,7 +813,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-10
                             </span>
                         <span class="publish-author">
                             
